@@ -1,7 +1,6 @@
 use leptos::IntoView;
 use minify_html::{minify, Cfg};
-
-pub mod countdown;
+pub mod homepage;
 pub mod layout;
 
 #[tracing::instrument(skip_all)]

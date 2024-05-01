@@ -7,6 +7,7 @@ use axum::{
     response::Response,
     Router,
 };
+use opentelemetry::trace::SpanKind;
 use tokio::net::TcpListener;
 use tower_http::{
     catch_panic::CatchPanicLayer, classify::ServerErrorsFailureClass, trace::TraceLayer,
@@ -27,16 +28,20 @@ pub async fn serve(db: DbPool) -> Result<()> {
     let app = api_router().with_state(AppState { db }).layer(
         TraceLayer::new_for_http()
             .make_span_with(|request: &Request<_>| {
-                return info_span!(
-                    "http_request",
-                    "http.request.method" = ?request.method(),
-                    "http.route" = request
+                // https://github.com/open-telemetry/semantic-conventions/blob/v1.23.0/docs/http/http-spans.md
+                let matched_route = request
                         .extensions()
                         .get::<MatchedPath>()
-                        .map(MatchedPath::as_str),
+                        .map(MatchedPath::as_str);
+                return info_span!(
+                    "http_request",
+                    "otel.name" = format!("{} {}", request.method(), matched_route.unwrap_or("UnknownRoute")),
+                    "otel.kind" = format!("{:?}", SpanKind::Server),
+                    "otel.status_code" = tracing::field::Empty,
+                    "http.request.method" = ?request.method(),
+                    "http.route" = matched_route,
                     "url.path" = request.uri().path(),
                     "url.query" = request.uri().query(),
-                    //"url.query" = request.uri().scheme().unwrap_or().as_str(),
                     "user_agent.original" = request.headers().get(header::USER_AGENT).and_then(|val| val.to_str().ok()),
                     "http.flavor" = match request.version() {
                         Version::HTTP_09 => "0.9",
@@ -53,15 +58,16 @@ pub async fn serve(db: DbPool) -> Result<()> {
             })
             .on_request(|_request: &Request<_>, _span: &Span| {})
             .on_response(|_response: &Response, _latency: Duration, _span: &Span| {
-                _span.record("http.response.status_code", _response.status().as_u16());
+                _span.record("http.response.status_code", _response.status().as_u16() as i64);
                 debug!("Request served");
             })
             .on_failure(
                 |_error: ServerErrorsFailureClass, _latency: Duration, _span: &Span| {
                     _span.record("error.type", _error.to_string());
+                    _span.record("otel.status_code", "ERROR");
                     debug!("Request errored");
-                },
-            ),
+                }
+            )
     );
 
     let listener = TcpListener::bind("127.0.0.1:4321").await.unwrap();

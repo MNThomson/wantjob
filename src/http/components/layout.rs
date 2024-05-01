@@ -27,57 +27,10 @@ tailwind.config = {
                 // "light-weak": "#a3a3a3",
                 light: "#e5e5e5",
                 dark: "#171717",
-                // "dark-weak": "#262626",
+                "dark-weak": "#262626",
                 accent: "#84cc16",
                 // "accent-weak": "#65a30d",
                 // "accent-weakest": "#4d7c0f",
-            },
-            keyframes: {
-                flickerin: {
-                    "0%": { opacity: 0.1 },
-                    "20%": { opacity: 0.5 },
-
-                    // Slow flicker (4%)
-                    // "24%, 32%, 40%": {opacity: .3},
-                    // "28%, 36%, 44%": {opacity: .7},
-                    // "48%": {opacity: .5},
-
-                    // Medium flicker (3%)
-                    "23%, 29%, 35%": { opacity: 0.3 },
-                    "26%, 32%, 38%": { opacity: 0.7 },
-                    "41%": { opacity: 0.5 },
-
-                    // Fast flicker (2%)
-                    // "22%, 28%, 32%": {opacity: .3},
-                    // "24%, 26%, 30%": {opacity: .7},
-                    // "34%": {opacity: .5},
-
-                    "100%": { opacity: 1 },
-                },
-                flicker: {
-                    "0%": { opacity: 1 },
-                    "20%": { opacity: 1 },
-
-                    // Slow flicker (4%)
-                    // "24%, 32%, 40%": {opacity: .3},
-                    // "28%, 36%, 44%": {opacity: .7},
-                    // "48%": {opacity: .5},
-
-                    // Medium flicker (3%)
-                    "23%, 29%, 35%": { opacity: 0.7 },
-                    "26%, 32%, 38%": { opacity: 1 },
-                    "41%": { opacity: 1 },
-
-                    // Fast flicker (2%)
-                    // "22%, 28%, 32%": {opacity: .3},
-                    // "24%, 26%, 30%": {opacity: .7},
-                    // "34%": {opacity: .5},
-
-                    "100%": { opacity: 1 },
-                },
-            },
-            animation: {
-                flicker: "flickerin 1.5s, flicker 1.5s infinite 1.5s",
             },
             dropShadow: {
                 "colored-sm": "0 0 1px var(--tw-shadow-color)",
@@ -88,7 +41,6 @@ tailwind.config = {
         },
         fontFamily: {
             sans: ["Zen Maru Gothic", "Lato", "sans-serif"],
-            fancy: ["Videotype", "Raleway", "sans-serif"],
         }
     }
 };"###;
@@ -105,7 +57,7 @@ pub fn Layout(children: Children) -> impl IntoView {
     return view! {
         <html lang="en">
             <head>
-                <title>CTFr</title>
+                <title>Want Job</title>
                 <meta charset="UTF-8" />
                 <meta name="viewport" content="width=device-width, initial-scale=1" />
                 <link rel="icon" href="/static/favicon.svg"/>
@@ -116,14 +68,14 @@ pub fn Layout(children: Children) -> impl IntoView {
             </head>
 
             <body class="flex flex-col h-screen justify-between bg-dark text-light text-base font-sans m-0">
-                <header class="py-3 bg-neutral-800 shadow-md">
+                <header class="py-3 bg-dark-weak shadow-md">
                     <nav class="container flex mx-auto justify-between items-center px-10 xl:max-w-screen-xl lg:max-w-screen-lg md:max-w-screen-md">
                         <div class="flex items-center">
-                            <a href="/" class="text-accent text-center text-2xl font-fancy animate-flicker shadow-accent">
+                            <a href="/" class="text-accent text-center text-xl font-bold">
                                 <img
                                     src="/static/favicon.svg"
                                     class="max-h-8 inline mr-2 drop-shadow-colored"
-                                /><span class="drop-shadow-colored">CTFr</span>
+                                /><span class="drop-shadow-colored">WantJob</span>
                             </a>
 
                             <div class="flex space-x-4 ml-5">
@@ -140,17 +92,19 @@ pub fn Layout(children: Children) -> impl IntoView {
                     </nav>
                 </header>
 
-                <main class="mb-auto mx-auto mt-8 p-5 max-w-screen-md md:text-lg text-base">
+                <main class="mb-auto mx-auto mt-2 max-w-screen-md md:text-lg text-base">
                     {children()}
                 </main>
 
+                /*
                 <footer class="footer">
                     <div class="container mx-auto text-center">
-                        <a href="https://github.com/MNThomson/CTFr" class="text-secondary" target="_blank" rel="noopener noreferrer">
-                            <small class="text-muted">Powered by CTFr | Made with {"♥️"}</small>
+                        <a href="https://github.com/MNThomson/wantjob" class="text-secondary" target="_blank" rel="noopener noreferrer">
+                            <small class="text-muted">Powered by WantJob | Made with {"♥️"}</small>
                         </a>
                     </div>
                 </footer>
+                */
             </body>
         </html>
     };

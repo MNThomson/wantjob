@@ -1,8 +1,7 @@
 use std::time::Duration;
 
 use anyhow::{Context, Result};
-use sqlx::Pool;
-use sqlx::{sqlite::SqlitePoolOptions, Sqlite, SqlitePool};
+use sqlx::{sqlite::SqlitePoolOptions, Pool, Sqlite, SqlitePool};
 
 pub type DB = Sqlite;
 

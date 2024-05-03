@@ -1,6 +1,4 @@
-use std::fs;
-use std::fs::File;
-use std::path::Path;
+use std::{fs, fs::File, path::Path};
 
 use rusqlite::{Connection, Result};
 
